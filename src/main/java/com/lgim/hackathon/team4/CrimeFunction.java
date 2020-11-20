@@ -8,6 +8,7 @@ import io.quarkus.funqy.Funq;
 
 import javax.inject.Inject;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 public class CrimeFunction {
@@ -30,12 +31,13 @@ public class CrimeFunction {
         var locationMatchCrimeData = crimeService.findByLocation(location, range, monthsCount);
 
         var totals = crimeTotalStatsService.getTotals(locationMatchCrimeData);
+        var detailsByType = crimeTotalStatsService.getDetailsByType(locationMatchCrimeData);
 
         return CrimeResponse.builder()
                 .location(location)
                 .range(range)
                 .totals(totals)
-                .details(Arrays.asList())
+                .details(detailsByType)
                 .build();
     }
 }

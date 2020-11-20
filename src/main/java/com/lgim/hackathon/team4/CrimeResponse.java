@@ -16,13 +16,6 @@ public class CrimeResponse {
     private Location location;
     private Integer range;
     private CrimeTotals totals;
-    private List<Details> details;
+    private List<CrimeDetails> details;
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public static class Details {
-        private String type;
-        private Integer reported;
-    }
 }

@@ -1,15 +1,10 @@
 package com.lgim.hackathon.team4.crime;
 
+import com.lgim.hackathon.team4.CrimeDetails;
 import com.lgim.hackathon.team4.CrimeOutcomes;
-import com.lgim.hackathon.team4.CrimeResponse;
 import com.lgim.hackathon.team4.CrimeTotals;
-import com.lgim.hackathon.team4.location.Location;
-import com.lgim.hackathon.team4.location.LocationService;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,21 +12,17 @@ import java.util.stream.Collectors;
 public class CrimeTotalStatsService {
 
     public CrimeTotals getTotals(List<CrimeDetail> crimeDetails) {
-
         var crimeOutcomes = crimeDetails.stream()
                 .map(crimeDetail -> {
                     if (crimeDetail.getOutcomeCategory().isBlank()) {
                         return CrimeOutcomes.builder().noOutcome(1).build();
-                    }
-                    else if (crimeDetail.getOutcomeCategory().equalsIgnoreCase("Under investigation")) {
+                    } else if (crimeDetail.getOutcomeCategory().equalsIgnoreCase("Under investigation")) {
                         return CrimeOutcomes.builder().inProgress(1).build();
-                    }
-                    else if (crimeDetail.getOutcomeCategory().equalsIgnoreCase("Unable to prosecute suspect")) {
+                    } else if (crimeDetail.getOutcomeCategory().equalsIgnoreCase("Unable to prosecute suspect")) {
                         return CrimeOutcomes.builder().notProsecuted(1).build();
-                    }
-                    else if (crimeDetail.getOutcomeCategory().equalsIgnoreCase("Investigation complete")) {
+                    } else if (crimeDetail.getOutcomeCategory().equalsIgnoreCase("Investigation complete")) {
                         if (crimeDetail.getContext().equalsIgnoreCase("no suspect identified")) {
-                            return CrimeOutcomes.builder().notProsecuted(1).build();
+                            return CrimeOutcomes.builder().noOutcome(1).build();
                         }
                         return CrimeOutcomes.builder().prosecuted(1).build();
                     }
@@ -48,5 +39,21 @@ public class CrimeTotalStatsService {
                 .reported(crimeDetails.size())
                 .outcomes(crimeOutcomes)
                 .build();
+    }
+
+    public List<CrimeDetails> getDetailsByType(List<CrimeDetail> locationMatchCrimeData) {
+        return locationMatchCrimeData.stream()
+                .map(crimeDetail -> CrimeDetails.builder()
+                        .type(crimeDetail.getCrimeType())
+                        .reported(1)
+                        .build())
+                .collect(Collectors.toMap(CrimeDetails::getType, CrimeDetails::getReported, Integer::sum))
+                .entrySet()
+                .stream()
+                .map(entry -> CrimeDetails.builder()
+                        .type(entry.getKey())
+                        .reported(entry.getValue())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

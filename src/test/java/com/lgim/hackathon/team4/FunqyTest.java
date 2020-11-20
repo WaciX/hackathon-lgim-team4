@@ -11,23 +11,7 @@ public class FunqyTest {
 
     @Test
     public void testGreeting() {
-        given()
-                .given()
-                .contentType("application/json")
-                .body("{\"name\": \"Bill\"}")
-                .post("/greet")
-                .then()
-                .statusCode(200)
-                .body("message", equalTo("Hello Bill"));
 
-        given()
-                .given()
-                .contentType("application/json")
-                .body(new Friend("John"))
-                .post("/greet")
-                .then()
-                .statusCode(200)
-                .body("message", equalTo("Hello John"));
     }
 
 }

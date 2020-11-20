@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Friend {
-    private String name;
+public class CrimeRequest {
+    private String postcode;
+    private Integer range;
+    private Integer months;
 }
